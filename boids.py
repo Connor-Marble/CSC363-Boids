@@ -19,7 +19,7 @@ logging.basicConfig()
 log = logging.getLogger()
 log.level=10
 
-PARTICLE_COUNT=130
+PARTICLE_COUNT=100
 window = None
 shader=None
 
@@ -128,13 +128,16 @@ def update():
         for dim in xrange(3):
             aim[dim]+=(center[dim]-p1[dim])/((10.0*len(neighbors))or 1)
             p1[dim+3]+=aim[dim]
-            p1[dim]+=p1[dim+3]
             speed += p1[dim+3]**2
 
         speed = math.sqrt(speed) or 1
+
         p1[3] = (p1[3]/speed)*0.005
         p1[4] = (p1[4]/speed)*0.005
         p1[5] = (p1[5]/speed)*0.005
+        
+        for dim in xrange(3):
+            p1[dim]+=p1[dim+3]            
             
             
 
@@ -144,14 +147,14 @@ def draw():
     update()
 
     if random()<0.01:
-        print (float(step))/(time.time()-start)
+        log.info(" FPS: {}".format(float(step)/(time.time()-start)))
     
 
     glClearColor(0, 0, 0, 0)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
 
-    glColor3f(0.0, 1.0, 1.0)
+    glColor3f(0.3, 0.8, 1.0)
     glBegin(GL_LINES)
     
     for particle in particles:
